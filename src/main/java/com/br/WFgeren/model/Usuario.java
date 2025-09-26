@@ -8,11 +8,10 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
-    @Column(nullable = false)
     private String name;
-    @Column(nullable = false)
     private String password;
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "invetario_id")
     private Inventario inventario;
 
     public Usuario(){}

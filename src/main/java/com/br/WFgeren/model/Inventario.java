@@ -10,7 +10,7 @@ public class Inventario {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
-    @OneToOne
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
     @OneToMany(mappedBy = "inventario",cascade = CascadeType.ALL, orphanRemoval = true)
