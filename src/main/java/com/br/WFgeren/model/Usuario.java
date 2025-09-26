@@ -1,5 +1,7 @@
 package com.br.WFgeren.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -10,8 +12,8 @@ public class Usuario {
     private int id;
     private String name;
     private String password;
-    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "invetario_id")
+    @OneToOne
+    @JoinColumn(name = "inventario_id")
     private Inventario inventario;
 
     public Usuario(){}

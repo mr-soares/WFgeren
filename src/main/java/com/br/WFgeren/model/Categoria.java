@@ -12,7 +12,7 @@ public class Categoria {
     private int id;
     @Column(nullable = false,length = 100,unique = true)
     private String nome;
-    @OneToMany(mappedBy = "categoria")
+    @OneToMany(mappedBy = "categoria",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Conjunto> conjuntos;
     public Categoria(){}
     public Categoria(String nome){

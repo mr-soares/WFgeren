@@ -21,6 +21,9 @@ public class Conjunto {
     @ManyToOne()
     @JoinColumn(name = "inventario_id", nullable = false)
     private Inventario inventario;
+    @OneToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
 
     public Conjunto(){}
     public Conjunto(String nome, List<Itens> itens, Categoria categoria, int valor){
@@ -28,6 +31,14 @@ public class Conjunto {
         this.itens = itens;
         this.categoria = categoria;
         this.valor = valor;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public int getId() {

@@ -1,23 +1,25 @@
 package com.br.WFgeren.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "inventario")
 public class Inventario {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "usuario_id", nullable = false)
+    @OneToOne(mappedBy = "inventario")
     private Usuario usuario;
-    @OneToMany(mappedBy = "inventario",cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Conjunto> conjuntos;
+    @OneToMany(mappedBy = "inventario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Conjunto> conjuntos = new ArrayList<>();
 
     public Inventario(){}
-    public Inventario( List<Conjunto> conjuntos){
+    public Inventario(Usuario usuario, List<Conjunto> conjuntos){
+        this.usuario = usuario;
         this.conjuntos = conjuntos;
     }
 

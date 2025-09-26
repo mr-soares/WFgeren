@@ -4,7 +4,6 @@ package com.br.WFgeren.controller;
 import com.br.WFgeren.DTO.AtualizarUser;
 import com.br.WFgeren.DTO.UsuarioDTO;
 import com.br.WFgeren.DTO.UsuarioInventarioDTO;
-import com.br.WFgeren.model.Usuario;
 import com.br.WFgeren.service.UsuarioService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
