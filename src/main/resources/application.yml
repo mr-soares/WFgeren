@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: WFgeren
+  datasource:
+    url: jdbc:postgresql://localhost:5432/BauPrime
+    username: Admin
+    password: 8663
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
