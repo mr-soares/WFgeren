@@ -22,12 +22,21 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(NomeUsuarioException.class)
-    public ResponseEntity<Map<String, Object>> handleNomeUsuarioException(SenhaUsuarioException handleNomeUsuarioException){
+    public ResponseEntity<Map<String, Object>> handleNomeUsuarioException(NomeUsuarioException handleNomeUsuarioException){
         Map<String, Object> error = new HashMap<>();
         error.put("Hora: ", LocalDate.now());
         error.put("Status: ", HttpStatus.BAD_REQUEST.value());
         error.put("Error: ","Usuário com esse nome, já existi.");
         error.put("mensagem",handleNomeUsuarioException.getMessage());
+        return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(UsuarioNaoExisteException.class)
+    public ResponseEntity<Map<String, Object>> handleNaoExisteUsuarioException(UsuarioNaoExisteException handleUsuarioNaoExisteException){
+        Map<String, Object> error = new HashMap<>();
+        error.put("Hora: ", LocalDate.now());
+        error.put("Status: ", HttpStatus.BAD_REQUEST.value());
+        error.put("Error: ","Usuário não existe.");
+        error.put("mensagem",handleUsuarioNaoExisteException.getMessage());
         return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
     }
 }
