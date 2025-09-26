@@ -4,6 +4,7 @@ import com.br.WFgeren.Config.SecurityConfig;
 import com.br.WFgeren.DTO.AtualizarUser;
 import com.br.WFgeren.DTO.CreateUser;
 import com.br.WFgeren.DTO.UsuarioDTO;
+import com.br.WFgeren.DTO.UsuarioInventarioDTO;
 import com.br.WFgeren.Exception.NomeUsuarioException;
 import com.br.WFgeren.Exception.SenhaUsuarioException;
 import com.br.WFgeren.Exception.UsuarioNaoExisteException;
@@ -46,11 +47,11 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
     //Buscar todos usuários
-    public List<Usuario> todosUsuarios(){
-        return usuarioRepository.findAll();
+    public List<UsuarioDTO> todosUsuarios(){
+        return usuarioRepository.findAll().stream().map(usuario -> new UsuarioDTO(usuario.getId(),usuario.getName())).toList();
     }
     //Atualizar Usuario
-    public Usuario atualizarUsuario(int id, AtualizarUser user){
+    public UsuarioDTO atualizarUsuario(int id, AtualizarUser user){
         Usuario usuario = usuarioRepository.findById(id).orElseThrow(() -> new NomeUsuarioException("Usuário não encontrado"));
         if (user.nome()!= null && !user.nome().isBlank()){
             usuario.setName(user.nome());
@@ -58,7 +59,8 @@ public class UsuarioService {
         if (user.senha()!= null && user.senha().isBlank()){
             usuario.setPassword(passwordEncoder.encode(user.senha()));
         }
-        return usuarioRepository.save(usuario);
+        Usuario usuarioAtualizado = usuarioRepository.save(usuario);
+        return new UsuarioDTO(usuarioAtualizado.getId(),usuarioAtualizado.getName());
     }
     //Deletar Usuario
     public void DeletarUsuario(int id){
@@ -68,8 +70,8 @@ public class UsuarioService {
         usuarioRepository.deleteById(id);
     }
     //Buscar um usuário
-    public UsuarioDTO BuscarUsuarioPorNome(String nome){
+    public UsuarioInventarioDTO BuscarUsuarioPorNome(String nome){
         Usuario usuario = usuarioRepository.findByName(nome).orElseThrow(() ->new UsuarioNaoExisteException("Usuário não encontrado com o nome: " + nome));
-        return new UsuarioDTO(usuario.getId(),usuario.getName());
+        return new UsuarioInventarioDTO(usuario.getId(),usuario.getName(),usuario.getInventario());
     }
 }
