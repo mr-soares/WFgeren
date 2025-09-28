@@ -2,8 +2,10 @@ package com.br.WFgeren.controller;
 
 
 import com.br.WFgeren.DTO.AtualizarUser;
+import com.br.WFgeren.DTO.CreateUser;
 import com.br.WFgeren.DTO.UsuarioDTO;
 import com.br.WFgeren.DTO.UsuarioInventarioDTO;
+import com.br.WFgeren.model.Usuario;
 import com.br.WFgeren.service.UsuarioService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -40,5 +42,9 @@ public class UsuarioController {
     @GetMapping("/{name}")
     public UsuarioInventarioDTO BuscarUsuarioPeloNome(@PathVariable String name){
         return usuarioService.BuscarUsuarioPorNome(name);
+    }
+    @PostMapping
+    public Usuario criarUsuario(@RequestBody CreateUser user){
+        return usuarioService.novoUsuario(user);
     }
 }

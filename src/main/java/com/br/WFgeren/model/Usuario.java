@@ -12,8 +12,9 @@ public class Usuario {
     private int id;
     private String name;
     private String password;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "inventario_id")
+    @JsonManagedReference
     private Inventario inventario;
 
     public Usuario(){}

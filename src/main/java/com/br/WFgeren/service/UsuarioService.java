@@ -10,20 +10,23 @@ import com.br.WFgeren.Exception.SenhaUsuarioException;
 import com.br.WFgeren.Exception.UsuarioNaoExisteException;
 import com.br.WFgeren.model.Inventario;
 import com.br.WFgeren.model.Usuario;
+import com.br.WFgeren.repository.InventarioRepository;
 import com.br.WFgeren.repository.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
-    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder){
+    private final InventarioRepository inventarioRepository;
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder, InventarioRepository inventarioRepository){
         this.passwordEncoder = passwordEncoder;
         this.usuarioRepository = usuarioRepository;
+        this.inventarioRepository = inventarioRepository;
     }
     // Criação de novo usuário
     public Usuario novoUsuario(CreateUser user){
@@ -41,7 +44,6 @@ public class UsuarioService {
         usuario.setPassword(passwordEncoder.encode(user.senha()));
         // criando o inventario
         Inventario inventario = new Inventario();
-        inventario.setUsuario(usuario);
         usuario.setInventario(inventario);
         // Salvando novo usuário no banco de dados
         return usuarioRepository.save(usuario);
@@ -71,7 +73,7 @@ public class UsuarioService {
     }
     //Buscar um usuário
     public UsuarioInventarioDTO BuscarUsuarioPorNome(String nome){
-        Usuario usuario = usuarioRepository.findByName(nome).orElseThrow(() ->new UsuarioNaoExisteException("Usuário não encontrado com o nome: " + nome));
+        Usuario usuario = usuarioRepository.findByNameIgnoreCase(nome).orElseThrow(() ->new UsuarioNaoExisteException("Usuário não encontrado com o nome: " + nome));
         return new UsuarioInventarioDTO(usuario.getId(),usuario.getName(),usuario.getInventario());
     }
 }

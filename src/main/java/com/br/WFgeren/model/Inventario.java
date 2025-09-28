@@ -13,6 +13,7 @@ public class Inventario {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     @OneToOne(mappedBy = "inventario")
+    @JsonBackReference
     private Usuario usuario;
     @OneToMany(mappedBy = "inventario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Conjunto> conjuntos = new ArrayList<>();
