@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.br.WFgeren.model.Itens;
 import com.br.WFgeren.repository.ItensRepository;
 
+
 @Service
 public class ItensService {
 
@@ -22,8 +23,8 @@ public class ItensService {
         return itensRepository.findAll();
     }
 
-    public Optional<Itens> buscarPorId(int id) {
-        return itensRepository.findById(id);
+    public Optional<Itens> buscarPorNome(String nome) {
+        return itensRepository.findByNome(nome);
     }
 
     public Itens salvar(Itens item) {
@@ -33,7 +34,7 @@ public class ItensService {
     public void deletar(int id) {
         itensRepository.deleteById(id);
     }
-    public Itens atualizarItem(int id, Itens itemAtualizado) {
+    public Itens atualizarItem(int id,Itens itemAtualizado) {
         Itens item = itensRepository.findById(id)
                 .orElseThrow(() -> new ItemNaoExisteException("Item não existe."));
 

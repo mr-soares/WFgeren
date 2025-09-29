@@ -35,5 +35,12 @@ public class CategoriaService {
         }
         return categoriaRepository.save(novaCategoria);
     }
+    //editar categoria
+    public Categoria editarCategoria(int id, Categoria novaCategoria){
+        Categoria categoria = categoriaRepository.findById(id).orElseThrow(() -> new RuntimeException("Categoria não encontrada!"));
+        categoria.setNome(novaCategoria.getNome());
+        categoriaRepository.save(categoria);
+        return categoria;
+    }
 
 }

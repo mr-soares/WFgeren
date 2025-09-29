@@ -23,10 +23,10 @@ public class ConjuntoService {
     }
     public Conjunto salvarConjunto(Conjunto novoConjunto){
         if (conjuntoRepository.existsById(novoConjunto.getId())){
-            throw new ConjuntoExisteExcption("Esse conjunto já existe!");
+            throw new ConjuntoExisteException("Esse conjunto já existe!");
         }
         if (conjuntoRepository.existsByNome(novoConjunto.getNome())){
-            throw new ConjuntoExisteExcption("Esse conjunto já existe!");
+            throw new ConjuntoExisteException("Esse conjunto já existe!");
         }
         conjuntoRepository.save(novoConjunto);
         return novoConjunto;
@@ -34,11 +34,11 @@ public class ConjuntoService {
 
     public void deletarConjunto(int id){
         if (!conjuntoRepository.existsById(id)){
-            throw new ConjuntoExisteExcption("Esse conjunto não existe!");
+            throw new ConjuntoExisteException("Esse conjunto não existe!");
         }
         conjuntoRepository.deleteById(id);
     }
-    public Conjunto atualizarConjunto(int id,Conjunto novoConjunto){
+    public Conjunto atualizarConjunto(int id, Conjunto novoConjunto){
         Conjunto conjunto = conjuntoRepository.findById(id)
                 .orElseThrow(() -> new ConjuntoExisteException("Conjunto não existe."));
 
