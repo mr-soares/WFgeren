@@ -39,4 +39,22 @@ public class GlobalExceptionHandler {
         error.put("mensagem",handleUsuarioNaoExisteException.getMessage());
         return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(ItemNaoExisteException.class)
+    public ResponseEntity<Map<String, Object>> handleNaoExisteItemException(ItemNaoExisteException handleItemNaoExisteException){
+        Map<String, Object> error = new HashMap<>();
+        error.put("Hora: ", LocalDate.now());
+        error.put("Status: ", HttpStatus.BAD_REQUEST.value());
+        error.put("Error: ","Item não existe.");
+        error.put("mensagem",handleItemNaoExisteException.getMessage());
+        return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(ConjuntoExisteException.class)
+    public ResponseEntity<Map<String, Object>> handleNaoExisteConjuntoException(ConjuntoExisteException handleConjuntoExisteException){
+        Map<String, Object> error = new HashMap<>();
+        error.put("Hora: ", LocalDate.now());
+        error.put("Status: ", HttpStatus.BAD_REQUEST.value());
+        error.put("Error: ","Conjunto já existe.");
+        error.put("mensagem", handleConjuntoExisteException.getMessage());
+        return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
+    }
 }
