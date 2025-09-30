@@ -17,7 +17,7 @@ public class Itens {
     @Column(nullable = false)
     private int quantidade;
     @ManyToOne
-    @JoinColumn(name = "conjunto_id", nullable = false)
+    @JoinColumn(name = "conjunto_id", nullable = true)
     private Conjunto conjunto;
 
     public Itens(){}

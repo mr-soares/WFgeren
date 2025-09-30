@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+//Api Categoria  Validado
 @RestController
 @RequestMapping("/api/categoria")
 public class CategoriaController {
@@ -32,11 +33,11 @@ public class CategoriaController {
         return categoriaService.buscarCategoriaPorNome(nome);
     }
     @PostMapping
-    public Categoria criarCategoria(Categoria novaCategoria){
+    public Categoria criarCategoria(@RequestBody Categoria novaCategoria){
         return categoriaService.criarCategoria(novaCategoria);
     }
     @PutMapping("/{id}")
-    public Categoria atualizarCategoria(@PathVariable int id, Categoria categoriaAtualizada){
+    public Categoria atualizarCategoria(@PathVariable int id, @RequestBody Categoria categoriaAtualizada){
         return categoriaService.editarCategoria(id, categoriaAtualizada);
     }
 }

@@ -20,7 +20,7 @@ public class ConjuntoController {
     //criar, excluir, procurar todos, procurar um e editar
 
     @PostMapping
-    public Conjunto criarConjunto(Conjunto novoConjunto){
+    public Conjunto criarConjunto(@RequestBody Conjunto novoConjunto){
         return conjuntoService.salvarConjunto(novoConjunto);
     }
     @DeleteMapping("/{id}")

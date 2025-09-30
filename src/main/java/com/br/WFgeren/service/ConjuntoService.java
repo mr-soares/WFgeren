@@ -43,7 +43,7 @@ public class ConjuntoService {
                 .orElseThrow(() -> new ConjuntoExisteException("Conjunto não existe."));
 
         if (novoConjunto.getNome() != null && !novoConjunto.getNome().isBlank()) {
-            conjunto.setNome(conjunto.getNome());
+            conjunto.setNome(novoConjunto.getNome());
         }
         if (novoConjunto.getCategoria() != null){
             conjunto.setCategoria(novoConjunto.getCategoria());

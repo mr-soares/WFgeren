@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+//validado apis
 @RestController
 @RequestMapping("/api/itens")
 public class ItensController {
@@ -32,11 +33,11 @@ public class ItensController {
         return itensService.buscarPorNome(nome);
     }
     @PostMapping
-    public Itens criarNovoItem(Itens novoItem){
+    public Itens criarNovoItem(@RequestBody Itens novoItem){
         return  itensService.salvar(novoItem);
     }
     @PutMapping("/{id}")
-    public Itens atualizarItem(@PathVariable int id, Itens itemAtualizado){
+    public Itens atualizarItem(@PathVariable int id,@RequestBody Itens itemAtualizado){
         return itensService.atualizarItem(id,itemAtualizado);
     }
 }

@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-//Caminho de requisição para api de usuário
-@RequestMapping("/api/User")
+@RequestMapping("/api/user")
+//api validada com sucesso!
 public class UsuarioController {
     private final UsuarioService usuarioService;
     private final PasswordEncoder passwordEncoder;
@@ -47,4 +47,5 @@ public class UsuarioController {
     public Usuario criarUsuario(@RequestBody CreateUser user){
         return usuarioService.novoUsuario(user);
     }
+
 }

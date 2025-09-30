@@ -15,7 +15,8 @@ public class Inventario {
     @OneToOne(mappedBy = "inventario")
     @JsonBackReference
     private Usuario usuario;
-    @OneToMany(mappedBy = "inventario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany( cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "inventario_id") // FK em conjunto
     private List<Conjunto> conjuntos = new ArrayList<>();
 
     public Inventario(){}
