@@ -1,104 +1,102 @@
 # WFgeren - Catálogo de Itens de Jogo com Inventário de Usuário
 
-## Visão geral
-WFgeren é uma API REST (Spring Boot) para cadastrar, catalogar e gerenciar itens de um jogo. Cada item possui nome, valores monetários (Platina e Dukat), tipo de equipamento e pode pertencer a um conjunto (ex.: partes de uma arma). Itens são organizados em categorias; conjuntos reúnem itens; cada usuário tem um inventário pessoal para registrar seus itens.
-
-Principais entidades: Usuario, Inventario, Conjunto, Itens, Categoria. Relacionamentos principais (resumo):
+Visão geral
+------------
+WFgeren é uma API REST construída com Spring Boot para cadastrar, catalogar e gerenciar itens de um jogo.  
+Principais entidades: Usuario, Inventario, Conjunto, Itens, Categoria.  
+Relacionamentos principais:
 - Usuario 1:1 Inventario
-- Inventario N:N Conjunto (inventário contém conjuntos)
+- Inventario N:N Conjunto
 - Conjunto 1:N Itens
 - Conjunto N:1 Categoria
 
-## Recursos (endpoints principais)
-Observação: caminhos exatos podem variar conforme os controllers do projeto; abaixo estão os padrões usados pela API:
+O projeto já contém camadas Controllers, Services, Models, Repositories (Spring Data JPA), DTOs, validações via Bean Validation e um tratamento global de exceções. Implementação JWT já existe na pasta `Config/` (JwtService, JwtUtils, JwtAuthenticationFilter, SecurityConfig).
 
-- Autenticação
-  - POST /api/auth/login — autentica e retorna JWT
-  - POST /api/auth/register — cria novo usuário (se implementado)
-
-- Usuário
-  - GET /api/users — listar usuários
-  - GET /api/users/{id} — obter usuário por id
-  - POST /api/users — criar usuário
-  - PUT /api/users/{id} — atualizar usuário
-  - DELETE /api/users/{id} — remover usuário
-
-- Categoria
-  - GET /api/categorias
-  - GET /api/categorias/{id}
-  - POST /api/categorias
-  - PUT /api/categorias/{id}
-  - DELETE /api/categorias/{id}
-
-- Conjunto
-  - GET /api/conjuntos
-  - GET /api/conjuntos/{id}
-  - POST /api/conjuntos
-  - PUT /api/conjuntos/{id}
-  - DELETE /api/conjuntos/{id}
-
-- Itens
-  - GET /api/itens
-  - GET /api/itens/{id}
-  - POST /api/itens
-  - PUT /api/itens/{id}
-  - DELETE /api/itens/{id}
-
-- Inventário
-  - GET /api/inventarios/{usuarioId} — inventário de um usuário
-  - POST /api/inventarios/{usuarioId}/itens — adicionar item ao inventário
-  - DELETE /api/inventarios/{usuarioId}/itens/{itemId} — remover item
-
-Exemplos de query params (a implementar se necessário):
-- GET /api/itens?categoria=Armas&sort=platina,desc
-- GET /api/itens?minPlatina=10&maxDukat=500
-
-## Arquitetura e padrões aplicados
-- Spring Boot (API REST)
-- Camadas: Controllers, Services, Repositories
-- Persistência: Spring Data JPA (JpaRepository)
-- DTOs: entrada/saída via classes em `DTO/`
-- Validação: Bean Validation nas DTOs (anotações como @NotBlank, @Positive)
-- Tratamento de exceções: `GlobalExceptionHandler` com @ControllerAdvice
-- Autenticação: JWT (filtros e serviços em `Config/`) — endpoints de login / emissão de token
-- Documentação OpenAPI/Swagger: configuração presente em `Config/OpenAPIConfig.java` (é necessário adicionar a dependência do springdoc no pom.xml)
-
-## Pré-requisitos
-- Java 17+
+Pré-requisitos (qualquer máquina)
+---------------------------------
+- Java 17+ (JDK instalado e variável JAVA_HOME configurada)
 - Maven 3.8+
-- Banco de dados configurado em `src/main/resources/application.yml` (H2, PostgreSQL, MySQL, etc.)
+- Git (opcional)
+- Para execução simples sem DB externo: H2 (in-memory) — já suportado pela configuração sugerida abaixo
+- Para produção/local com DB real: PostgreSQL / MySQL (ajustar variáveis de ambiente)
 
-## Como executar (Windows)
-1. Abra o terminal na pasta do projeto:
-   cd "c:\Users\paulo\OneDrive\Documentos\Sistems corporativos\projeto final\WFgeren-1"
+Variáveis de ambiente recomendadas
+----------------------------------
+- JWT_SECRET — segredo para assinatura dos tokens JWT (obrigatório em produção)
+- SPRING_DATASOURCE_URL — JDBC URL do banco (opcional; se ausente, H2 em memória será usado)
+- SPRING_DATASOURCE_USERNAME
+- SPRING_DATASOURCE_PASSWORD
+- SERVER_PORT (opcional; padrão 8080)
+- SPRING_PROFILES_ACTIVE (opcional: dev/prod)
 
-2. Build:
-   mvn clean install
+Exemplos (Windows PowerShell):
+$env:JWT_SECRET="troque_por_uma_chave_segura"
+$env:SPRING_DATASOURCE_URL="jdbc:postgresql://dbhost:5432/wfgeren"
+$env:SPRING_DATASOURCE_USERNAME="usuario"
+$env:SPRING_DATASOURCE_PASSWORD="senha"
 
-3. Executar:
-   mvn spring-boot:run
-   ou (após build)
-   java -jar target\WFgeren-1-0.0.1-SNAPSHOT.jar
+Exemplos (Linux/macOS):
+export JWT_SECRET="troque_por_uma_chave_segura"
+export SPRING_DATASOURCE_URL="jdbc:postgresql://dbhost:5432/wfgeren"
 
-4. Testes:
-   mvn test
+Configuração mínima sugerida (rodar em qualquer máquina)
+--------------------------------------------------------
+Para facilitar execução sem configurar banco externo, o projeto consegue rodar com H2 em memória. Adicione (ou verifique) no `src/main/resources/application.yml`:
 
-5. Acessos úteis (padrões)
-   - API: http://localhost:8080/
-   - Swagger UI (se dependência adicionada): http://localhost:8080/swagger-ui/index.html
-   - H2 Console (se habilitado no application.yml): caminho configurado em `application.yml`
+spring:
+  datasource:
+    url: jdbc:h2:mem:wfgeren;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+server:
+  port: 8080
+jwt:
+  secret: ${JWT_SECRET:change_me}
 
-## Autenticação (JWT)
-Fluxo básico:
-1. POST /api/auth/login com JSON { "username": "...", "password": "..." }.
-2. Receber token JWT no corpo/resposta.
-3. Em chamadas protegidas, adicionar header:
-   Authorization: Bearer <token>
+Construir e executar
+--------------------
+1. Clonar repositório
+- git clone <URL_DO_REPOSITORIO>
+- cd WFgeren-1
 
-Verifique `Config/SecurityConfig.java`, `Config/JwtService.java` e `Config/JwtUtils.java` para detalhes da implementação.
+2. Build
+- mvn clean package
 
-## Configuração do Swagger (se ainda não adicionado)
-Adicionar ao `pom.xml`:
+3. Executar (opções)
+- Desenvolvimento (Maven):
+  mvn spring-boot:run
+
+- Executando JAR:
+  java -jar target\<artifactId>-<version>.jar
+  (ajuste o nome do JAR conforme o `target/` gerado)
+
+- Executando com variáveis temporárias (PowerShell exemplo):
+  $env:JWT_SECRET="minha_chave"; mvn spring-boot:run
+
+- Passando propriedades ao iniciar o JAR:
+  java -jar target\WFgeren-1-0.0.1-SNAPSHOT.jar --spring.datasource.url=jdbc:h2:mem:wfgeren --jwt.secret=minhaChave
+
+Executar em Docker (opcional)
+-----------------------------
+Criar Dockerfile (simples) e usar imagem do JDK para rodar o JAR. Exemplo rápido:
+- Build jar: mvn clean package
+- Dockerfile mínimo:
+  FROM eclipse-temurin:17-jdk
+  COPY target/*.jar app.jar
+  ENTRYPOINT ["java","-jar","/app.jar"]
+- Build e run:
+  docker build -t wfgeren .
+  docker run -e JWT_SECRET=minhaChave -p 8080:8080 wfgeren
+
+Swagger / OpenAPI (documentação)
+-------------------------------
+O projeto inclui `Config/OpenAPIConfig.java`. Para habilitar a UI do Swagger certifique-se de:
+1. Adicionar dependência no `pom.xml` (se não existir):
 ```xml
 <dependency>
   <groupId>org.springdoc</groupId>
@@ -106,27 +104,68 @@ Adicionar ao `pom.xml`:
   <version>2.5.0</version>
 </dependency>
 ```
-Após adicionar, reinicie a aplicação e acesse o Swagger UI em /swagger-ui/index.html.
+2. Se Spring Security estiver ativo, liberar os endpoints do Swagger em `SecurityConfig`:
+- /v3/api-docs/**, /swagger-ui/**, /swagger-ui.html
 
-## Observações importantes / Pendências
-- Garantir que os métodos dos Controllers usem `@Valid` nos DTOs para ativar validação automática.
-- Implementar/ajustar filtros de segurança para proteger endpoints sensíveis (inventário, criação/remoção de recursos).
-- Adicionar exemplos de query params e endpoints de busca/filtragem.
-- Confirmar e ajustar configurações em `application.yml` (datasource, porta, propriedades JWT).
-- Caso queira testes de integração, adicionar configuração de banco em memória (H2) para os testes.
+Após subir a aplicação, acessar:
+- http://localhost:8080/swagger-ui/index.html
+ou
+- http://localhost:8080/v3/api-docs
 
-## Estrutura de diretórios (resumo)
-- src/main/java/com/br/WFgeren/
-  - Config/ (segurança, jwt, openapi)
-  - controller/
-  - DTO/
-  - Exception/
-  - model/
-  - repository/
-  - service/
-- src/main/resources/
-  - application.yml
+Autenticação (JWT) — uso rápido
+-------------------------------
+1. Obter token:
+- POST /api/auth/login
+  Payload (exemplo):
+  {
+    "username": "usuario",
+    "password": "senha"
+  }
 
-## Contato / Próximos passos
-- Para finalizar o projeto: adicionar dependência do springdoc, revisar controllers para `@Valid`, proteger endpoints, e adicionar endpoints de filtragem por query params.
-- Posso gerar exemplos prontos (README, dependência pom.xml, exemplos de requests para login e uso do JWT, e exemplos de controllers com `@Valid`) — diga qual deseja primeiro.
+2. Usar token nas requisições protegidas:
+- Header: Authorization: Bearer <token>
+
+Observações:
+- Verificar `Config/SecurityConfig.java` para rotas protegidas / liberadas.
+- Se Swagger não estiver acessível por causa da segurança, ajustar SecurityConfig conforme acima.
+
+Endpoints principais (resumo)
+-----------------------------
+- /api/auth/** — autenticação/registro
+- /api/users/** — CRUD usuários
+- /api/categorias/** — CRUD categorias
+- /api/conjuntos/** — CRUD conjuntos
+- /api/itens/** — CRUD itens
+- /api/inventarios/** — operações de inventário
+
+Validações e DTOs
+-----------------
+- DTOs com Bean Validation já existem em `DTO/`.  
+- Para ativar validação nos controllers verifique se os métodos usam `@RequestBody @Valid` nos parâmetros de entrada.
+
+Tratamento de erros
+-------------------
+- Handler global presente em `Exception/GlobalExceptionHandler.java`.
+
+Testes
+------
+- Executar: mvn test
+- Para testes que exigem DB use profile com H2 em memória (configurar `application-test.yml` se necessário).
+
+Boas práticas para rodar em qualquer máquina
+--------------------------------------------
+- Usar variáveis de ambiente para segredos e credenciais (JWT_SECRET, SPRING_DATASOURCE_*).
+- Preferir H2 em memória para ambiente de desenvolvimento/CI.
+- Em produção, usar banco externo e configurar `hibernate.ddl-auto=validate`.
+- Liberar endpoints do Swagger ao usar segurança para permitir inspeção da API.
+
+Solução de problemas comuns
+---------------------------
+- Porta em uso: definir `SERVER_PORT` ou `server.port` em application.yml.
+- Falta JWT_SECRET: definir variável de ambiente ou usar fallback temporário (não recomendado em produção).
+- Swagger não aparece: verificar dependência `springdoc` e permissões no `SecurityConfig`.
+- Erros de conexão DB: checar URL/credenciais e driver no classpath.
+
+Licença
+-------
+Uso acadêmico / demonstrativo.
