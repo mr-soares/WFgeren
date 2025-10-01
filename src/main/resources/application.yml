@@ -2,14 +2,15 @@ spring:
   application:
     name: WFgeren
   datasource:
-    url: jdbc:postgresql://localhost:5432/BauPrime
-    username: Admin
-    password: 8663
+    url: jdbc:postgresql://ep-summer-sunset-a8gqps22-pooler.eastus2.azure.neon.tech/neondb?sslmode=require&channel_binding=require
+    username: neondb_owner
+    password: npg_GzLjC5SrI3mt
   jpa:
     show-sql: true
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
+    open-in-view: false
 jwt:
-  secret:
+  secret: "minhaChaveSuperSecretaComMaisDe32Caracteres"
   expiration: 3600000

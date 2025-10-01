@@ -1,11 +1,9 @@
 package com.br.WFgeren.controller;
 
-import com.br.WFgeren.Config.JwtConfig;
-import com.br.WFgeren.DTO.LoginRequest;
 import com.br.WFgeren.Config.JwtService;
+import com.br.WFgeren.DTO.LoginRequest;
 import com.br.WFgeren.service.TokenBlacklistService;
 import com.br.WFgeren.service.TokenStoreService;
-import jakarta.annotation.PostConstruct;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
