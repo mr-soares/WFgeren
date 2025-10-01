@@ -3,11 +3,11 @@ package com.br.WFgeren.controller;
 import com.br.WFgeren.model.Itens;
 import com.br.WFgeren.service.ItensService;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid; // Necessário para o @Valid
 
 import java.util.List;
 import java.util.Optional;
 
-//validado apis
 @RestController
 @RequestMapping("/api/itens")
 public class ItensController {
@@ -18,26 +18,32 @@ public class ItensController {
         this.itensService = itensService;
     }
 
-    //criar, editar, excluir, buscar todos e buscar pelo nome
-
     @GetMapping
-    public List<Itens> buscarTodosItens(){
+    public List<Itens> buscarTodosItens(
+            @RequestParam(required = false) String nome,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        if (nome != null && !nome.isEmpty()) {
+            return itensService.buscarPorNome(nome)
+                    .map(List::of)
+                    .orElse(List.of());
+        }
         return itensService.listarTodos();
     }
-    @DeleteMapping("/{id}")
-    public void deletarItem(@PathVariable int id){
-         itensService.deletar(id);
-    }
-    @GetMapping("/{nome}")
-    public Optional<Itens> buscarItemPeloNome(@PathVariable String nome){
-        return itensService.buscarPorNome(nome);
-    }
+
     @PostMapping
-    public Itens criarNovoItem(@RequestBody Itens novoItem){
+    public Itens criarNovoItem(@Valid @RequestBody Itens novoItem){
         return  itensService.salvar(novoItem);
     }
+
     @PutMapping("/{id}")
-    public Itens atualizarItem(@PathVariable int id,@RequestBody Itens itemAtualizado){
+    public Itens atualizarItem(@PathVariable int id, @Valid @RequestBody Itens itemAtualizado){
         return itensService.atualizarItem(id,itemAtualizado);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deletarItem(@PathVariable int id){
+        itensService.deletar(id);
     }
 }
